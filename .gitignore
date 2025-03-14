@@ -1,8 +1,10 @@
-# Compiled class file
+### Java ###
+# Compiled class files
 *.class
 
-# Log file
+# Log files
 *.log
+logs/
 
 # BlueJ files
 *.ctxt
@@ -10,7 +12,7 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
-# Package Files #
+# Package Files
 *.jar
 *.war
 *.nar
@@ -19,6 +21,82 @@
 *.tar.gz
 *.rar
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+# JVM crash logs
 hs_err_pid*
 replay_pid*
+
+### Spring Boot ###
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS/Eclipse ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+### Firebase ###
+# Firebase service account keys
+**/firebase-service-account*.json
+**/serviceAccountKey*.json
+**/*firebase*.json
+
+### Spring Boot Application Properties ###
+# Uncomment the following lines if you want to exclude specific properties files
+# that contain sensitive information
+# src/main/resources/application-dev.properties
+# src/main/resources/application-prod.properties
+# src/main/resources/application-local.properties
+
+### Secrets ###
+**/secrets/
+**/credentials/
+**/*.key
+**/*.pem
+**/application-secrets.properties
+**/application-secrets.yml
+
+### OS specific files ###
+# Mac
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+### Maven ###
+.mvn/*
+!.mvn/wrapper/
+mvnw*
+
+### Gradle ###
+.gradle
+**/build/
+!src/**/build/
