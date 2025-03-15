@@ -13,6 +13,8 @@ import com.google.cloud.firestore.Firestore;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
+import com.google.firebase.auth.UserRecord.CreateRequest;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,6 +27,15 @@ public class UserService {
         private final Firestore firestore;
 
         private static final String USERS_COLLECTION = "users";
+
+        public UserRecord createUser(String email, String password) throws FirebaseAuthException {
+            CreateRequest request = new CreateRequest()
+                .setEmail(email)
+                .setPassword(password)
+                .setEmailVerified(false);
+            
+            return firebaseAuth.createUser(request);
+        }
 
         public UserRecord getUserById(String uid) throws FirebaseAuthException {
             return firebaseAuth.getUser(uid);
