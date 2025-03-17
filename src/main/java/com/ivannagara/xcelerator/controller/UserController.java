@@ -25,8 +25,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final FirebaseApp firebaseApp;
-
     private final UserService userService;
 
     @GetMapping("/public/health")

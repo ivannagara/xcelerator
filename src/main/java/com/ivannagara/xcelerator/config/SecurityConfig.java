@@ -21,10 +21,12 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        // Disable CSRF protection
+        // Disable CSRF protection, because currently we use stateless authentication
+        // with Firebase Auth Tokens (token-based authentication)
         http.csrf(csrf -> csrf.disable());
         
-        // Set session management to stateless
+        // Set session management to stateless,
+        // building RESTful API without session management (no cookies)
         http.sessionManagement(session -> 
             session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         

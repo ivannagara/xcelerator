@@ -55,7 +55,7 @@ public class FirebaseAuthFilter extends OncePerRequestFilter {
             FirebaseToken decodedToken = firebaseAuth.verifyIdToken(token);
             String uid = decodedToken.getUid();
             
-            // You can set user details in request attributes for controllers to access
+            // Can set user details in request attributes for controllers to access
             request.setAttribute("userId", uid);
             request.setAttribute("userEmail", decodedToken.getEmail());
             
