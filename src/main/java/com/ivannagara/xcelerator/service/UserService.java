@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
 import com.google.firebase.auth.UserRecord.CreateRequest;
+import com.ivannagara.xcelerator.model.Role;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,13 +29,26 @@ public class UserService {
 
         private static final String USERS_COLLECTION = "users";
 
-        public UserRecord createUser(String email, String password) throws FirebaseAuthException {
+        public UserRecord createUser(String email, String password, Role role) throws FirebaseAuthException {
             CreateRequest request = new CreateRequest()
                 .setEmail(email)
                 .setPassword(password)
                 .setEmailVerified(false);
+
+            UserRecord userRecord = firebaseAuth.createUser(request);
+
+            Map<String, Object> userData = new HashMap<>();
+            userData.put("email", email);
+            userData.put("uid", userRecord.getUid());
+            userData.put("role", role.toString());
             
-            return firebaseAuth.createUser(request);
+            saveUserProfile(userRecord.getUid(), userData);
+    
+            return userRecord;
+        }
+
+        public UserRecord createUser(String email, String password) throws FirebaseAuthException {
+            return createUser(email, password, Role.STAFF);
         }
 
         public UserRecord getUserById(String uid) throws FirebaseAuthException {
@@ -69,6 +83,46 @@ public class UserService {
             } catch(ExecutionException e) {
                 log.error("Error executing Firestore query", e);
                 return new HashMap<>();
+            }
+        }
+
+        public Role getUserRole(String uid) {
+            try {
+                Map<String, Object> profile = getUserProfileFromFirestore(uid);
+                if (profile.containsKey("role")) {
+                    String roleStr = (String) profile.get("role");
+                    return Role.valueOf(roleStr.toUpperCase());
+                }
+            } catch(Exception e) {
+                log.error("Error getting user role", e);
+            }
+            return Role.STAFF;
+        }
+
+        /**
+         *  Only SUPER_ADMIN can set SUPER_ADMIN role; 
+         *  ADMIN can only set STAFF role
+         */
+        public boolean updateUserRole(String uid, Role newRole, Role currentUserRole) {
+            if (newRole == Role.SUPER_ADMIN && currentUserRole != Role.SUPER_ADMIN) {
+                return false;
+            }
+
+            if (currentUserRole == Role.ADMIN && newRole != Role.STAFF) {
+                return false;
+            }
+
+            try {
+                Map<String, Object> updates = new HashMap<>();
+                updates.put("role", newRole.name());
+                
+                DocumentReference docRef = firestore.collection(USERS_COLLECTION).document(uid);
+                docRef.update(updates);
+                log.info("Updated role for user {} to {}", uid, newRole);
+                return true;
+            } catch (Exception e) {
+                log.error("Failed to update user role", e);
+                return false;
             }
         }
 }
